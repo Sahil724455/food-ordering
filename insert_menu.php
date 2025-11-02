@@ -9,9 +9,13 @@ $menuItems = [
 ];
 
 foreach($menuItems as $item){
-    $stmt = $pdo->prepare("INSERT INTO menu (name, description, price) VALUES (?, ?, ?)");
-    $stmt->execute([$item[0], $item[1], $item[2]]);
+    foreach($menuItems as $item){
+    $stmt = $pdo->prepare("INSERT INTO menu (name, description, price) VALUES (:name, :description, :price)");
+    $stmt->execute([
+        ':name' => $item[0],
+        ':description' => $item[1],
+        ':price' => $item[2]
+    ]);
 }
 
-echo "Menu items added successfully!";
-?>
+    
