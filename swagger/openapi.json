@@ -1,0 +1,330 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Food Ordering API",
+    "version": "1.0.0",
+    "description": "Complete API documentation for the Food Ordering System"
+  },
+  "servers": [
+    { "url": "http://127.0.0.1:8000", "description": "Local PHP built-in server" },
+    { "url": "http://localhost/food-ordering", "description": "Local XAMPP/Apache" }
+  ],
+  "paths": {
+    "/apimodels/register.php": {
+      "post": {
+        "summary": "Register a new user",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Sahil Bhattarai" },
+                  "email": { "type": "string", "format": "email", "example": "bhattaraisahil001@gmail.com" },
+                  "password": { "type": "string", "example": "sahil123" }
+                },
+                "required": ["name", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "User registered successfully" },
+          "400": { "description": "Missing required fields" },
+          "409": { "description": "Email already exists" }
+        }
+      }
+    },
+    "/apimodels/login.php": {
+      "post": {
+        "summary": "Login user",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "format": "email", "example": "bhattaraisahil001@gmail.com" },
+                  "password": { "type": "string", "example": "sahil123" }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "integer" },
+                        "name": { "type": "string" },
+                        "email": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Invalid credentials" }
+        }
+      }
+    },
+    "/apimodels/menu.php": {
+      "get": {
+        "summary": "Get all menu items",
+        "tags": ["Menu"],
+        "responses": {
+          "200": {
+            "description": "List of menu items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "name": { "type": "string" },
+                      "description": { "type": "string" },
+                      "price": { "type": "number" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apimodels/cart/add.php": {
+      "post": {
+        "summary": "Add item to cart",
+        "tags": ["Cart"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": { "type": "integer" },
+                  "menu_item_id": { "type": "integer" },
+                  "quantity": { "type": "integer", "minimum": 1 }
+                },
+                "required": ["user_id", "menu_item_id", "quantity"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Item added to cart" },
+          "400": { "description": "Invalid request" }
+        }
+      }
+    },
+    "/apimodels/cart/user_cart.php": {
+      "get": {
+        "summary": "Get user's cart items",
+        "tags": ["Cart"],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User's cart items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "menu_item_id": { "type": "integer" },
+                      "quantity": { "type": "integer" },
+                      "name": { "type": "string" },
+                      "price": { "type": "number" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apimodels/orders/create.php": {
+      "post": {
+        "summary": "Create a new order",
+        "tags": ["Orders"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": { "type": "integer" },
+                  "total": { "type": "number" }
+                },
+                "required": ["user_id", "total"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { 
+            "description": "Order created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "order_id": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+  "/apimodels/orders/user_orders.php": {
+      "get": {
+        "summary": "Get user's orders",
+        "tags": ["Orders"],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user's orders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "user_id": { "type": "integer" },
+                      "total": { "type": "number" },
+                      "created_at": { "type": "string", "format": "date-time" },
+                      "status": { "type": "string", "enum": ["pending", "processing", "completed", "cancelled"] }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ,
+    "/api/cart/add.php": {
+      "post": {
+        "summary": "Add item to cart (api)",
+        "tags": ["Cart"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": { "type": "integer" },
+                  "menu_item_id": { "type": "integer" },
+                  "quantity": { "type": "integer", "minimum": 1 }
+                },
+                "required": ["user_id", "menu_item_id", "quantity"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Item added to cart", "content": { "application/json": { "schema": { "type": "object" } } } },
+          "400": { "description": "Invalid request" }
+        }
+      }
+    },
+    "/api/cart/user_cart.php": {
+      "get": {
+        "summary": "Get user's cart (api)",
+        "tags": ["Cart"],
+        "parameters": [
+          { "name": "user_id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "User cart items", "content": { "application/json": { "schema": { "type": "array" } } } } }
+      }
+    },
+    "/api/orders/create.php": {
+      "post": {
+        "summary": "Create an order (api)",
+        "tags": ["Orders"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": { "type": "integer" },
+                  "total": { "type": "number" }
+                },
+                "required": ["user_id", "total"]
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Order created", "content": { "application/json": { "schema": { "type": "object" } } } } }
+      }
+    },
+    "/api/menu.php": {
+      "get": {
+        "summary": "Get menu items (api)",
+        "tags": ["Menu"],
+        "responses": { "200": { "description": "List of menu items", "content": { "application/json": { "schema": { "type": "array" } } } } }
+      }
+    },
+    "/api/login.php": {
+      "post": {
+        "summary": "Login (api)",
+        "tags": ["Authentication"],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "email": { "type": "string" }, "password": { "type": "string" } }, "required": ["email","password"] } } } },
+        "responses": { "200": { "description": "Login success" }, "401": { "description": "Unauthorized" } }
+      }
+    },
+    "/api/register.php": {
+      "post": {
+        "summary": "Register (api)",
+        "tags": ["Authentication"],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "name": { "type": "string" }, "email": { "type": "string" }, "password": { "type": "string" } }, "required": ["name","email","password"] } } } },
+        "responses": { "200": { "description": "User created" }, "400": { "description": "Invalid input" } }
+      }
+    }
+  }
+}

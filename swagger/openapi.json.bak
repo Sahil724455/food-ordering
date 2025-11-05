@@ -1,0 +1,90 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Food Ordering API",
+    "version": "1.0.0",
+    "description": "Complete API documentation for the Food Ordering System"
+  },
+  "servers": [
+    { "url": "http://localhost/food-ordering", "description": "Local XAMPP" }
+  ],
+  "paths": {
+    "/apimodels/register.php": {
+      "post": {
+        "summary": "Register a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {"type": "string"},
+                  "email": {"type": "string", "format": "email"},
+                  "password": {"type": "string"}
+                },
+                "required": ["email","password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "User registered / success message" },
+          "400": { "description": "Bad request" }
+        }
+      }
+    },
+    "/apimodels/login.php": {
+      "post": {
+        "summary": "Login user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {"type": "string", "format": "email"},
+                  "password": {"type": "string"}
+                },
+                "required": ["email","password"]
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Login success (token or session)" }, "401": { "description": "Unauthorized" } }
+      }
+    },
+    "/apimodels/orders/create.php": {
+      "post": {
+        "summary": "Create an order",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {"type": "integer"},
+                  "total": {"type": "number"},
+                  "items": {"type": "array", "items": {"type": "object"}}
+                },
+                "required": ["user_id","total"]
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Order created" }, "400": { "description": "Bad request" } }
+      }
+    },
+    "/apimodels/orders/readorder.php": {
+      "get": {
+        "summary": "Read orders for a user",
+        "parameters": [
+          { "name": "user_id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "List of orders" }, "404": { "description": "Not found" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+RewriteEngine On
+
+# Enable CORS
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type"
+
+# Rewrite rules to handle API endpoints
+RewriteRule ^api/cart/([^/]+)/?$ api/cart/$1.php [L,QSA]
+RewriteRule ^api/orders/([^/]+)/?$ api/orders/$1.php [L,QSA]
+RewriteRule ^api/menu/([^/]+)/?$ api/menu/$1.php [L,QSA]
+
+# Return everything else to index for SPA handling
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php [L]
