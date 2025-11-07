@@ -1,7 +1,11 @@
 <?php
+<<<<<<< HEAD
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 require_once __DIR__ . '/../db.php';
+=======
+require '../db.php';
+>>>>>>> 206961b794b4876ba20ae88eb049be94a543c1f8
 
 $data = json_decode(file_get_contents('php://input'), true);
 

@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 // Show all errors and flush output
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -59,10 +60,49 @@ try {
         CREATE TABLE IF NOT EXISTS orders (
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id BIGINT(20) UNSIGNED NOT NULL,
+=======
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// MySQL connection
+$host = 'localhost';
+$user = 'root';
+$pass = ''; // XAMPP default password is empty
+
+try {
+    $pdo = new PDO("mysql:host=$host", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Create database if not exists
+    $pdo->exec("CREATE DATABASE IF NOT EXISTS food_ordering CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
+    echo "Database 'food_ordering' created successfully!\n";
+
+    // Use the database
+    $pdo->exec("USE food_ordering");
+
+    // Create users table
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            email VARCHAR(100) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    ");
+    echo "Table 'users' created successfully!\n";
+
+    // Create orders table
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS orders (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+>>>>>>> 206961b794b4876ba20ae88eb049be94a543c1f8
             total DECIMAL(10,2) NOT NULL,
             status VARCHAR(50) DEFAULT 'pending',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id)
+<<<<<<< HEAD
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
     ");
     echo "✅ Table 'orders' ready.<br>";
@@ -116,5 +156,26 @@ try {
 } catch (PDOException $e) {
     echo "<strong>❌ Database Error:</strong> " . $e->getMessage();
     exit;
+=======
+        );
+    ");
+    echo "Table 'orders' created successfully!\n";
+
+    // Create cart table
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS cart (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            menu_item_id INT NOT NULL,
+            quantity INT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+    ");
+    echo "Table 'cart' created successfully!\n";
+
+} catch (PDOException $e) {
+    die("DB Error: " . $e->getMessage());
+>>>>>>> 206961b794b4876ba20ae88eb049be94a543c1f8
 }
 ?>
